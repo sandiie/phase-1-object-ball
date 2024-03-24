@@ -4,6 +4,61 @@
   catch.
 </p>
 
-<script src="./src/00-objectball.js"></script>
+
+<script src="./src/00-objectball.js">console.log(gameObject());
+ 
+  
+ var balls = [[], [], []],
+canvases = document.getElementsByTagName('canvas'),
+context = [],
+interval,
+boxWidth = 150,
+ballRadius = 10,
+canvasHeight = 235;
+for (var i = 0; i < canvases.length; i++) {
+context.push(canvases[i].getContext('2d'));
+}
+
+function draw() {
+var movement = false;
+for (var i = 0; i < 3; i++) {
+    context[i].clearRect(0, 0, boxWidth, canvasHeight);
+    for (var j = 0; j < balls[i].length; j++) {
+        if (balls[i][j].y < balls[i][j].yStop) {
+            balls[i][j].y += 4;
+            movement = true;
+        }
+        context[i].beginPath();
+        context[i].fillStyle = "red";
+        context[i].arc(balls[i][j].x, balls[i][j].y, ballRadius, 0, Math.PI * 2, true);
+        context[i].closePath();
+        context[i].fill();
+    }
+}
+if (!movement) {
+    clearInterval(interval);
+    interval = null;
+}
+}
+
+function newBall(n) {
+console.log('new ball', n);
+var last = balls[n][balls[n].length - 1],
+    ball = {x: ballRadius, y: ballRadius, yStop: canvasHeight - ballRadius};
+if (last) {
+    if (last.x < boxWidth - ballRadius * 3) {
+         ball.x = last.x + ballRadius * 2;
+         ball.yStop = last.yStop;
+    } else {
+         ball.yStop = last.yStop - ballRadius * 2;
+    }
+}
+balls[n].push(ball);
+if (!interval) {
+    interval = setInterval(draw, 10);
+}
+}
+
+</script>
 <script src="./src/01-simple-debug.js"></script>
 <!-- <script src="./src/02-advanced-debug.js"></script> -->
